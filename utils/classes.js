@@ -4,11 +4,7 @@ const classes = {
     marginBottom: 1,
   },
   smallText: {
-    fontSize: '15px',
-  },
-  section: {
-    marginTop: 1,
-    marginBottom: 1,
+    fontSize: '12px',
   },
   main: {
     marginTop: 2,
@@ -48,8 +44,8 @@ const classes = {
   hidden: {
     display: 'none',
   },
-  // search
 
+  // search
   searchForm: {
     border: '1px solid #ffffff',
     backgroundColor: '#ffffff',

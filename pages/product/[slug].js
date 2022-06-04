@@ -1,9 +1,14 @@
 import {
   Alert,
   Box,
+  Button,
+  Card,
   CircularProgress,
   Grid,
   Link,
+  List,
+  ListItem,
+  Rating,
   Typography,
 } from '@mui/material';
 import Image from 'next/image';
@@ -62,6 +67,57 @@ export default function ProductScreen(props) {
                 width={640}
                 height={640}
               />
+            </Grid>
+            <Grid md={3} xs={12}>
+              <List>
+                <ListItem>
+                  <Typography component="h1" variant="h1">
+                    {product.name}
+                  </Typography>
+                </ListItem>
+                <ListItem>Category: {product.category}</ListItem>
+                <ListItem>Brand: {product.brand}</ListItem>
+                <ListItem>
+                  <Rating value={product.rating} readOnly></Rating>
+                  <Typography sx={classes.smallText}>
+                    ({product.numReviews} reviews )
+                  </Typography>
+                </ListItem>
+                <ListItem>
+                  <Typography>Description: {product.description}</Typography>
+                </ListItem>
+              </List>
+            </Grid>
+            <Grid item md={3} xs={12}>
+              <Card>
+                <ListItem>
+                  <Grid container>
+                    <Grid item xs={6}>
+                      <Typography>Price:</Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography>${product.price}</Typography>
+                    </Grid>
+                  </Grid>
+                </ListItem>
+                <ListItem>
+                  <Grid container>
+                    <Grid item xs={6}>
+                      <Typography>Status</Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography>
+                        {product.countInStock > 0 ? 'In stock' : 'Unavailable'}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </ListItem>
+                <ListItem>
+                  <Button fullWidth variant="contained">
+                    Add to cart
+                  </Button>
+                </ListItem>
+              </Card>
             </Grid>
           </Grid>
         </Box>
