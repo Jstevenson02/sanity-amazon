@@ -6,6 +6,10 @@ const classes = {
   smallText: {
     fontSize: '15px',
   },
+  section: {
+    marginTop: 1,
+    marginBottom: 1,
+  },
   main: {
     marginTop: 2,
     minHeight: '80vh',
