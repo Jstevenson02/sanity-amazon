@@ -21,13 +21,20 @@ function reducer(state, action) {
     case 'CARD_ADD_ITEM': {
       const newItem = action.payload;
       const existItem = state.cart.cartItems.find(
-        (item) => item._key === newItem._key,
+        (item) => item._key === newItem._key
       );
       const cartItems = existItem
         ? state.cartItems.map((item) =>
-            item._key === existItem._key ? newItem : item,
+            item._key === existItem._key ? newItem : item
           )
         : [...state.cartItems, newItem];
+      Cookies.set('cartItems', JSON.stringify(cartItems));
+      return { ...state, cart: { ...state.cart, cartItems } };
+    }
+    case 'CARD_REMOVE_ITEM': {
+      const cartItems = state.cart.cartItems.filter(
+        (item) => item._key !== action.payload._key
+      );
       Cookies.set('cartItems', JSON.stringify(cartItems));
       return { ...state, cart: { ...state.cart, cartItems } };
     }
