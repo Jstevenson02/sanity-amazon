@@ -18,20 +18,20 @@ function reducer(state, action) {
       return { ...state, darkMode: true };
     case 'DARK_MODE_OFF':
       return { ...state, darkMode: false };
-    case 'CARD_ADD_ITEM': {
+    case 'CART_ADD_ITEM': {
       const newItem = action.payload;
       const existItem = state.cart.cartItems.find(
         (item) => item._key === newItem._key
       );
       const cartItems = existItem
-        ? state.cartItems.map((item) =>
+        ? state.cart.cartItems.map((item) =>
             item._key === existItem._key ? newItem : item
           )
-        : [...state.cartItems, newItem];
+        : [...state.cart.cartItems, newItem];
       Cookies.set('cartItems', JSON.stringify(cartItems));
       return { ...state, cart: { ...state.cart, cartItems } };
     }
-    case 'CARD_REMOVE_ITEM': {
+    case 'CART_REMOVE_ITEM': {
       const cartItems = state.cart.cartItems.filter(
         (item) => item._key !== action.payload._key
       );
