@@ -2,7 +2,7 @@ import sanityClient from '@sanity/client';
 import config from './config';
 
 const client = sanityClient({
-  projectId: config.projectId,
+  projectId: config.projectIds,
   dataset: config.dataset,
   useCdn: true,
 });
