@@ -1,5 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@emotion/react';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import {
   AppBar,
   CssBaseline,
@@ -82,10 +83,8 @@ export default function Layout({ title, description, children }) {
               <NextLink href="/cart" passHref>
                 <Typography component="span">
                   {cart.cartItems.length > 0 ? (
-                    <Badge
-                      color="secondary"
-                      badgeContent={cart.cartItems.length}>
-                      Cart
+                    <Badge color="warning" badgeContent={cart.cartItems.length}>
+                      <ShoppingCartIcon />
                     </Badge>
                   ) : (
                     'Cart'
@@ -99,7 +98,9 @@ export default function Layout({ title, description, children }) {
           {children}
         </Container>
         <Box component="footer" sx={classes.footer}>
-          <Typography>All rights reserved 2022 Handmade By Design</Typography>
+          <Typography>
+            Copyright © 2022 All rights reserved. Handmade By Design
+          </Typography>
         </Box>
       </ThemeProvider>
     </>
