@@ -84,7 +84,7 @@ export default function Layout({ title, description, children }) {
                 <Typography component="span">
                   {cart.cartItems.length > 0 ? (
                     <Badge color="warning" badgeContent={cart.cartItems.length}>
-                      <ShoppingCartIcon />
+                      Cart
                     </Badge>
                   ) : (
                     'Cart'
