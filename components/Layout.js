@@ -1,6 +1,5 @@
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@emotion/react';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import {
   AppBar,
   CssBaseline,
@@ -81,15 +80,22 @@ export default function Layout({ title, description, children }) {
             <Box>
               <Switch checked={darkMode} onChange={darkModeChangeHandler} />
               <NextLink href="/cart" passHref>
-                <Typography component="span">
-                  {cart.cartItems.length > 0 ? (
-                    <Badge color="warning" badgeContent={cart.cartItems.length}>
-                      Cart
-                    </Badge>
-                  ) : (
-                    'Cart'
-                  )}
-                </Typography>
+                <Link>
+                  <Typography component="span">
+                    {cart.cartItems.length > 0 ? (
+                      <Badge
+                        color="warning"
+                        badgeContent={cart.cartItems.length}>
+                        Cart
+                      </Badge>
+                    ) : (
+                      'Cart'
+                    )}
+                  </Typography>
+                </Link>
+              </NextLink>
+              <NextLink href="/login" passHref>
+                <Link>Login</Link>
               </NextLink>
             </Box>
           </Toolbar>

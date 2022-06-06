@@ -4,7 +4,7 @@ const classes = {
     marginBottom: 1,
   },
   smallText: {
-    fontSize: '12px',
+    fontSize: '15px',
   },
   main: {
     marginTop: 2,
@@ -27,7 +27,9 @@ const classes = {
   brand: {
     fontWeight: 'bold',
     fontSize: '1.5rem',
+    color: '#ffffff',
   },
+
   navbarButton: {
     color: '#ffffff',
     textTransform: 'initial',
@@ -44,8 +46,8 @@ const classes = {
   hidden: {
     display: 'none',
   },
-
   // search
+
   searchForm: {
     border: '1px solid #ffffff',
     backgroundColor: '#ffffff',

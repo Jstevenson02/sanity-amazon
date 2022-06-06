@@ -12,23 +12,56 @@ import NextLink from 'next/link';
 import Form from '../components/Form';
 import Layout from '../components/Layout';
 
-export default function LoginScreen() {
+export default function RegisterScreen() {
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm();
-  const submitHandler = async ({ email, password }) => {};
+  const submitHandler = async ({
+    name,
+    email,
+    password,
+    confirmPassword,
+  }) => {};
   return (
-    <Layout title="Login">
+    <Layout title="Register">
       <Form onSubmit={handleSubmit(submitHandler)}>
         <Typography component="h1" variant="h1">
-          Login
+          Register
         </Typography>
         <List>
           <ListItem>
             <Controller
-              name="password"
+              name="name"
+              control={control}
+              defaultValue=""
+              rules={{
+                required: true,
+                minLength: 2,
+              }}
+              render={({ field }) => (
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  id="name"
+                  label="Name"
+                  inputProps={{ type: 'name' }}
+                  error={Boolean(errors.name)}
+                  helperText={
+                    errors.name
+                      ? errors.name.type === 'minLength'
+                        ? 'Name length is more than 1'
+                        : 'Name is required'
+                      : ''
+                  }
+                  {...field}
+                />
+              )}></Controller>
+          </ListItem>
+          <ListItem>
+            <Controller
+              name="email"
               control={control}
               defaultValue=""
               rules={{
@@ -56,12 +89,40 @@ export default function LoginScreen() {
           </ListItem>
           <ListItem>
             <Controller
-              name="password"
+              name="confirmPassword"
               control={control}
               defaultValue=""
               rules={{
                 required: true,
                 pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+              }}
+              render={({ field }) => (
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  id="confirmPassword"
+                  label="Confirm Password"
+                  inputProps={{ type: 'confirmPassword' }}
+                  error={Boolean(errors.confirmPassword)}
+                  helperText={
+                    errors.confirmPassword
+                      ? errors.confirmPassword.type === 'minLength'
+                        ? 'Confirm Password length is more than 5'
+                        : 'Please retype to confirm password.'
+                      : ''
+                  }
+                  {...field}
+                />
+              )}></Controller>
+          </ListItem>
+          <ListItem>
+            <Controller
+              name="password"
+              control={control}
+              defaultValue=""
+              rules={{
+                required: true,
+                minLength: 6,
               }}
               render={({ field }) => (
                 <TextField
@@ -84,13 +145,13 @@ export default function LoginScreen() {
           </ListItem>
           <ListItem>
             <Button variant="contained" type="submit" fullWidth color="primary">
-              Login
+              Register
             </Button>
           </ListItem>
           <ListItem>
-            Do not have an account with us?
-            <NextLink href={'/register'} passHref>
-              <Link>Register</Link>
+            Already have an account?{''}
+            <NextLink href={'/login'} passHref>
+              <Link>Login here</Link>
             </NextLink>
           </ListItem>
         </List>
