@@ -31,6 +31,7 @@ handler.post(async (req, res) => {
   if (existUser) {
     return res.status(401).send({ message: 'Email aleardy exists' });
   }
+
   const { data } = await axios.post(
     `https://${projectId}.api.sanity.io/v1/data/mutate/${dataset}?returnIds=true`,
     { mutations: createMutations },
