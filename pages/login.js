@@ -1,3 +1,8 @@
+import React, { useContext, useEffect } from 'react';
+import Layout from '../components/Layout';
+import { useForm, Controller } from 'react-hook-form';
+import NextLink from 'next/link';
+import Form from '../components/Form';
 import {
   Button,
   Link,
@@ -6,19 +11,42 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import NextLink from 'next/link';
-import Form from '../components/Form';
-import Layout from '../components/Layout';
+import { useSnackbar } from 'notistack';
+import axios from 'axios';
+import { Store } from '../utils/Store';
+import { useRouter } from 'next/router';
+import jsCookie from 'js-cookie';
 
 export default function LoginScreen() {
+  const { state, dispatch } = useContext(Store);
+  const { userInfo } = state;
+  const router = useRouter();
+  const { redirect } = router.query;
+  useEffect(() => {
+    if (userInfo) {
+      router.push(redirect || '/');
+    }
+  }, [router, userInfo, redirect]);
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm();
-  const submitHandler = async ({ email, password }) => {};
+
+  const { enqueueSnackbar } = useSnackbar();
+  const submitHandler = async ({ email, password }) => {
+    try {
+      const { data } = await axios.post('/api/users/login', {
+        email,
+        password,
+      });
+      dispatch({ type: 'USER_LOGIN', payload: data });
+      jsCookie.set('userInfo', JSON.stringify(data));
+      router.push(redirect || '/');
+    } catch (err) {
+      enqueueSnackbar(getError(err), { variant: 'error' });
+    }
+  };
   return (
     <Layout title="Login">
       <Form onSubmit={handleSubmit(submitHandler)}>
@@ -28,7 +56,7 @@ export default function LoginScreen() {
         <List>
           <ListItem>
             <Controller
-              name="password"
+              name="email"
               control={control}
               defaultValue=""
               rules={{
@@ -50,8 +78,7 @@ export default function LoginScreen() {
                         : 'Email is required'
                       : ''
                   }
-                  {...field}
-                />
+                  {...field}></TextField>
               )}></Controller>
           </ListItem>
           <ListItem>
@@ -61,7 +88,7 @@ export default function LoginScreen() {
               defaultValue=""
               rules={{
                 required: true,
-                pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+                minLength: 6,
               }}
               render={({ field }) => (
                 <TextField
@@ -78,8 +105,7 @@ export default function LoginScreen() {
                         : 'Password is required'
                       : ''
                   }
-                  {...field}
-                />
+                  {...field}></TextField>
               )}></Controller>
           </ListItem>
           <ListItem>
@@ -88,8 +114,8 @@ export default function LoginScreen() {
             </Button>
           </ListItem>
           <ListItem>
-            Do not have an account with us?
-            <NextLink href={'/register'} passHref>
+            Do not have an account?{' '}
+            <NextLink href={`/register?redirect=${redirect || '/'}`} passHref>
               <Link>Register</Link>
             </NextLink>
           </ListItem>

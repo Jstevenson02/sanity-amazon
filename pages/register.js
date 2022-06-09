@@ -1,3 +1,8 @@
+import React, { useContext, useEffect } from 'react';
+import Layout from '../components/Layout';
+import { useForm, Controller } from 'react-hook-form';
+import NextLink from 'next/link';
+import Form from '../components/Form';
 import {
   Button,
   Link,
@@ -6,24 +11,49 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import NextLink from 'next/link';
-import Form from '../components/Form';
-import Layout from '../components/Layout';
+import { useSnackbar } from 'notistack';
+import axios from 'axios';
+import jsCookie from 'js-cookie';
+import { useRouter } from 'next/router';
+import { Store } from '../utils/Store';
+import { getError } from '../utils/error';
 
 export default function RegisterScreen() {
+  const { state, dispatch } = useContext(Store);
+  const { userInfo } = state;
+  const router = useRouter();
+  useEffect(() => {
+    if (userInfo) {
+      router.push('/');
+    }
+  }, [router, userInfo]);
+
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm();
-  const submitHandler = async ({
-    name,
-    email,
-    password,
-    confirmPassword,
-  }) => {};
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const submitHandler = async ({ name, email, password, confirmPassword }) => {
+    if (password !== confirmPassword) {
+      enqueueSnackbar("Passwords don't match", { variant: 'error' });
+      return;
+    }
+    try {
+      const { data } = await axios.post('/api/users/register', {
+        name,
+        email,
+        password,
+      });
+      dispatch({ type: 'USER_LOGIN', payload: data });
+      jsCookie.set('userInfo', JSON.stringify(data));
+      router.push('/');
+    } catch (err) {
+      enqueueSnackbar(getError(err), { variant: 'error' });
+    }
+  };
   return (
     <Layout title="Register">
       <Form onSubmit={handleSubmit(submitHandler)}>
@@ -55,10 +85,10 @@ export default function RegisterScreen() {
                         : 'Name is required'
                       : ''
                   }
-                  {...field}
-                />
+                  {...field}></TextField>
               )}></Controller>
           </ListItem>
+
           <ListItem>
             <Controller
               name="email"
@@ -83,36 +113,7 @@ export default function RegisterScreen() {
                         : 'Email is required'
                       : ''
                   }
-                  {...field}
-                />
-              )}></Controller>
-          </ListItem>
-          <ListItem>
-            <Controller
-              name="confirmPassword"
-              control={control}
-              defaultValue=""
-              rules={{
-                required: true,
-                pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
-              }}
-              render={({ field }) => (
-                <TextField
-                  variant="outlined"
-                  fullWidth
-                  id="confirmPassword"
-                  label="Confirm Password"
-                  inputProps={{ type: 'confirmPassword' }}
-                  error={Boolean(errors.confirmPassword)}
-                  helperText={
-                    errors.confirmPassword
-                      ? errors.confirmPassword.type === 'minLength'
-                        ? 'Confirm Password length is more than 5'
-                        : 'Please retype to confirm password.'
-                      : ''
-                  }
-                  {...field}
-                />
+                  {...field}></TextField>
               )}></Controller>
           </ListItem>
           <ListItem>
@@ -139,8 +140,34 @@ export default function RegisterScreen() {
                         : 'Password is required'
                       : ''
                   }
-                  {...field}
-                />
+                  {...field}></TextField>
+              )}></Controller>
+          </ListItem>
+          <ListItem>
+            <Controller
+              name="confirmPassword"
+              control={control}
+              defaultValue=""
+              rules={{
+                required: true,
+                minLength: 6,
+              }}
+              render={({ field }) => (
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  id="confirmPassword"
+                  label="Confirm Password"
+                  inputProps={{ type: 'password' }}
+                  error={Boolean(errors.confirmPassword)}
+                  helperText={
+                    errors.confirmPassword
+                      ? errors.confirmPassword.type === 'minLength'
+                        ? 'Confirm Password length is more than 5'
+                        : 'Confirm Password is required'
+                      : ''
+                  }
+                  {...field}></TextField>
               )}></Controller>
           </ListItem>
           <ListItem>
@@ -149,9 +176,9 @@ export default function RegisterScreen() {
             </Button>
           </ListItem>
           <ListItem>
-            Already have an account?{''}
+            Already have an account?{' '}
             <NextLink href={'/login'} passHref>
-              <Link>Login here</Link>
+              <Link>Login</Link>
             </NextLink>
           </ListItem>
         </List>

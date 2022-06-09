@@ -1,7 +1,7 @@
 import { Alert, CircularProgress, Grid, Typography } from '@mui/material';
 import axios from 'axios';
-import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
 import { useContext, useEffect, useState } from 'react';
 import Layout from '../components/Layout';
 import ProductItem from '../components/ProductItem';
@@ -14,17 +14,13 @@ export default function Home() {
     state: { cart },
     dispatch,
   } = useContext(Store);
-
   const router = useRouter();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const [state, setState] = useState({
     products: [],
     error: '',
     loading: true,
   });
-
   const { loading, error, products } = state;
 
   useEffect(() => {
@@ -33,7 +29,7 @@ export default function Home() {
         const products = await client.fetch(`*[_type == "product"]`);
         setState({ products, loading: false });
       } catch (err) {
-        setState({ error: err.message, loading: false });
+        setState({ loading: false, error: err.message });
       }
     };
     fetchData();
@@ -74,11 +70,10 @@ export default function Home() {
       ) : (
         <Grid container spacing={3}>
           {products.map((product) => (
-            <Grid item xs={12} sm={6} md={4} key={product.slug}>
+            <Grid item md={4} key={product.slug}>
               <ProductItem
                 product={product}
-                addToCartHandler={addToCartHandler}
-              />
+                addToCartHandler={addToCartHandler}></ProductItem>
             </Grid>
           ))}
         </Grid>
