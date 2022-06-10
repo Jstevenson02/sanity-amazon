@@ -20,8 +20,7 @@ export default function ProductItem({ product, addToCartHandler }) {
           <CardMedia
             component="img"
             image={urlForThumbnail(product.image)}
-            title={product.name}
-          />
+            title={product.name}></CardMedia>
           <CardContent>
             <Typography>{product.name}</Typography>
             <Rating value={product.rating} readOnly></Rating>
@@ -34,7 +33,7 @@ export default function ProductItem({ product, addToCartHandler }) {
           size="small"
           color="primary"
           onClick={() => addToCartHandler(product)}>
-          Add to Cart
+          Add to cart
         </Button>
       </CardActions>
     </Card>
