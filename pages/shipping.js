@@ -1,12 +1,12 @@
 import { Button, List, ListItem, TextField, Typography } from '@mui/material';
 import React, { useContext, useEffect } from 'react';
-import { Controller, useForm } from 'react-hook-form';
 import CheckoutWizard from '../components/CheckoutWizard';
-import Form from '../components/Form';
 import Layout from '../components/Layout';
+import Form from '../components/Form';
+import { Controller, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
-import jsCookie from 'js-cookie';
 import { Store } from '../utils/Store';
+import jsCookie from 'js-cookie';
 
 export default function ShippingScreen() {
   const {
@@ -15,7 +15,6 @@ export default function ShippingScreen() {
     formState: { errors },
     setValue,
   } = useForm();
-
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
   const {
@@ -27,6 +26,7 @@ export default function ShippingScreen() {
     if (!userInfo) {
       return router.push('/login?redirect=/shipping');
     }
+
     setValue('fullName', shippingAddress.fullName);
     setValue('address', shippingAddress.address);
     setValue('city', shippingAddress.city);
@@ -37,13 +37,7 @@ export default function ShippingScreen() {
   const submitHandler = ({ fullName, address, city, postalCode, country }) => {
     dispatch({
       type: 'SAVE_SHIPPING_ADDRESS',
-      payload: {
-        fullName,
-        address,
-        city,
-        postalCode,
-        country,
-      },
+      payload: { fullName, address, city, postalCode, country },
     });
     jsCookie.set(
       'shippingAddress',
@@ -57,7 +51,6 @@ export default function ShippingScreen() {
     );
     router.push('/payment');
   };
-
   return (
     <Layout title="Shipping Address">
       <CheckoutWizard activeStep={1}></CheckoutWizard>
@@ -66,7 +59,6 @@ export default function ShippingScreen() {
           Shipping Address
         </Typography>
         <List>
-          {' '}
           <ListItem>
             <Controller
               name="fullName"
@@ -83,10 +75,10 @@ export default function ShippingScreen() {
                   id="fullName"
                   label="Full Name"
                   inputProps={{ type: 'fullName' }}
-                  error={Boolean(errors.name)}
+                  error={Boolean(errors.fullName)}
                   helperText={
-                    errors.name
-                      ? errors.name.type === 'minLength'
+                    errors.fullName
+                      ? errors.fullName.type === 'minLength'
                         ? 'Full Name length is more than 1'
                         : 'Full Name is required'
                       : ''
@@ -188,7 +180,7 @@ export default function ShippingScreen() {
                 <TextField
                   variant="outlined"
                   fullWidth
-                  id="country"
+                  id="postalCode"
                   label="Country"
                   inputProps={{ type: 'country' }}
                   error={Boolean(errors.country)}
@@ -203,7 +195,7 @@ export default function ShippingScreen() {
               )}></Controller>
           </ListItem>
           <ListItem>
-            <Button variant="contained" color="primary" fullWidth type="submit">
+            <Button variant="contained" type="submit" fullWidth color="primary">
               Continue
             </Button>
           </ListItem>
