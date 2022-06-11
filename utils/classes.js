@@ -27,9 +27,7 @@ const classes = {
   brand: {
     fontWeight: 'bold',
     fontSize: '1.5rem',
-    color: '#ffffff',
   },
-
   navbarButton: {
     color: '#ffffff',
     textTransform: 'initial',

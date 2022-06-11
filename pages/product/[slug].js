@@ -13,12 +13,12 @@ import {
 } from '@mui/material';
 import Image from 'next/image';
 import NextLink from 'next/link';
+import { useContext, useEffect, useState } from 'react';
+import { useSnackbar } from 'notistack';
 import Layout from '../../components/Layout';
 import classes from '../../utils/classes';
 import client from '../../utils/client';
-import { useSnackbar } from 'notistack';
 import { urlFor, urlForThumbnail } from '../../utils/image';
-import { useState, useEffect, useContext } from 'react';
 import { Store } from '../../utils/Store';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -42,7 +42,7 @@ export default function ProductScreen(props) {
       try {
         const product = await client.fetch(
           `
-              *[_type == "product" && slug.current == $slug][0]`,
+            *[_type == "product" && slug.current == $slug][0]`,
           { slug }
         );
         setState({ ...state, product, loading: false });
@@ -78,7 +78,6 @@ export default function ProductScreen(props) {
     });
     router.push('/cart');
   };
-
   return (
     <Layout title={product?.title}>
       {loading ? (
@@ -90,7 +89,7 @@ export default function ProductScreen(props) {
           <Box sx={classes.section}>
             <NextLink href="/" passHref>
               <Link>
-                <Typography>back to results</Typography>
+                <Typography>back to result</Typography>
               </Link>
             </NextLink>
           </Box>
@@ -104,7 +103,7 @@ export default function ProductScreen(props) {
                 height={640}
               />
             </Grid>
-            <Grid md={3} xs={12}>
+            <Grid item md={3} xs={12}>
               <List>
                 <ListItem>
                   <Typography component="h1" variant="h1">
@@ -116,7 +115,7 @@ export default function ProductScreen(props) {
                 <ListItem>
                   <Rating value={product.rating} readOnly></Rating>
                   <Typography sx={classes.smallText}>
-                    ({product.numReviews} reviews )
+                    ({product.numReviews} reviews)
                   </Typography>
                 </ListItem>
                 <ListItem>
@@ -126,36 +125,40 @@ export default function ProductScreen(props) {
             </Grid>
             <Grid item md={3} xs={12}>
               <Card>
-                <ListItem>
-                  <Grid container>
-                    <Grid item xs={6}>
-                      <Typography>Price:</Typography>
+                <List>
+                  <ListItem>
+                    <Grid container>
+                      <Grid item xs={6}>
+                        <Typography>Price</Typography>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Typography>${product.price}</Typography>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={6}>
-                      <Typography>${product.price}</Typography>
+                  </ListItem>
+                  <ListItem>
+                    <Grid container>
+                      <Grid item xs={6}>
+                        <Typography>Status</Typography>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Typography>
+                          {product.countInStock > 0
+                            ? 'In stock'
+                            : 'Unavailable'}
+                        </Typography>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </ListItem>
-                <ListItem>
-                  <Grid container>
-                    <Grid item xs={6}>
-                      <Typography>Status</Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Typography>
-                        {product.countInStock > 0 ? 'In stock' : 'Unavailable'}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-                <ListItem>
-                  <Button
-                    onClick={addToCartHandler}
-                    fullWidth
-                    variant="contained">
-                    Add to cart
-                  </Button>
-                </ListItem>
+                  </ListItem>
+                  <ListItem>
+                    <Button
+                      onClick={addToCartHandler}
+                      fullWidth
+                      variant="contained">
+                      Add to cart
+                    </Button>
+                  </ListItem>
+                </List>
               </Card>
             </Grid>
           </Grid>
